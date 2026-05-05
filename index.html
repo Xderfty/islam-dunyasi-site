@@ -117,6 +117,86 @@
             cursor: pointer;
         }
 
+        /* Sound Toggle Button */
+        .sound-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--green-primary);
+            border: 3px solid var(--green-accent);
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 5px 25px rgba(74, 222, 128, 0.3);
+        }
+
+        .sound-toggle:hover {
+            transform: scale(1.1);
+            background: var(--green-light);
+        }
+
+        .sound-toggle.muted {
+            background: #444;
+            border-color: #666;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+        }
+
+        /* Music Player Overlay */
+        .music-player {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            background: rgba(26, 92, 58, 0.95);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--green-accent);
+            border-radius: 20px;
+            padding: 20px;
+            z-index: 9998;
+            transform: translateX(400px);
+            transition: transform 0.4s ease;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .music-player.active {
+            transform: translateX(0);
+        }
+
+        .music-player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .music-player-header h3 {
+            font-size: 1rem;
+            color: var(--green-accent);
+        }
+
+        .music-close {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .music-iframe {
+            width: 100%;
+            height: 200px;
+            border-radius: 15px;
+            border: none;
+        }
+
         /* Hero Section */
         .hero {
             height: 100vh;
@@ -193,6 +273,7 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
+            border: none;
         }
 
         .btn-primary {
@@ -722,20 +803,23 @@
             .ayet-arabic {
                 font-size: 1.5rem;
             }
-        }
 
-        /* Animations */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease;
-        }
+            .music-player {
+                width: 90%;
+                right: 5%;
+                bottom: 90px;
+            }
 
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
+            .sound-toggle {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+                bottom: 20px;
+                right: 20px;
+            }
         }
     </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -758,6 +842,26 @@
         </button>
     </nav>
 
+    <!-- Sound Toggle Button -->
+    <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" title="Müzik Aç/Kapat">
+        <i class="fas fa-volume-up" id="soundIcon"></i>
+    </button>
+
+    <!-- Music Player Overlay -->
+    <div class="music-player" id="musicPlayer">
+        <div class="music-player-header">
+            <h3><i class="fas fa-music"></i> Arka Plan İlahisi</h3>
+            <button class="music-close" onclick="closeMusicPlayer()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <iframe class="music-iframe" id="musicIframe" 
+            src="https://www.youtube.com/embed/sQne01NG_24?autoplay=0&mute=0&loop=1&playlist=sQne01NG_24" 
+            allow="autoplay; encrypted-media" 
+            allowfullscreen>
+        </iframe>
+    </div>
+
     <!-- Hero Section -->
     <section class="hero" id="anasayfa">
         <div class="hero-content">
@@ -776,17 +880,17 @@
 
     <!-- Ayet Section -->
     <section class="ayet-section" id="ayetler">
-        <h2 class="section-title fade-in">Kur'an-ı Kerim'den Seçme Ayetler</h2>
-        <p class="section-subtitle fade-in">Her gün yeni bir ayetle manevi dünyanızı zenginleştirin</p>
+        <h2 class="section-title">Kur'an-ı Kerim'den İyilik Ayetleri</h2>
+        <p class="section-subtitle">İyiliği emreden, kötülükten alıkoyan ayetler</p>
 
-        <div class="ayet-card fade-in">
+        <div class="ayet-card">
             <div class="ayet-arabic" id="ayetArabic">
-                بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                وَتَعَاوَنُوا عَلَى الْبِرِّ وَالتَّقْوَىٰ
             </div>
             <div class="ayet-turkish" id="ayetTurkish">
-                "Rahman ve Rahim olan Allah'ın adıyla."
+                "İyilik ve takva üzere birbirinize yardım edin."
             </div>
-            <div class="ayet-source" id="ayetSource">Fatiha Suresi, 1. Ayet</div>
+            <div class="ayet-source" id="ayetSource">Maide Suresi, 2. Ayet</div>
 
             <div class="ayet-nav">
                 <button onclick="prevAyet()">
@@ -801,67 +905,67 @@
 
     <!-- Hadis Section -->
     <section class="hadis-section" id="hadisler">
-        <h2 class="section-title fade-in">Kutlu Sözler - Hadis-i Şerifler</h2>
-        <p class="section-subtitle fade-in">Peygamber Efendimiz Hz. Muhammed (s.a.v.)'den seçme hadisler</p>
+        <h2 class="section-title">İyilik ve Güzel Ahlak Hadisleri</h2>
+        <p class="section-subtitle">Peygamber Efendimiz Hz. Muhammed (s.a.v.)'den iyiliği emreden hadisler</p>
 
         <div class="hadis-grid">
-            <div class="hadis-card fade-in">
-                <div class="hadis-icon"><i class="fas fa-heart"></i></div>
-                <div class="hadis-text">
-                    "Hiçbiriniz, kendisi için istediğini mümin kardeşi için istemedikçe kamil iman etmiş olmaz."
-                </div>
-                <div class="hadis-source">Buhari ve Müslim</div>
-            </div>
-
-            <div class="hadis-card fade-in">
+            <div class="hadis-card">
                 <div class="hadis-icon"><i class="fas fa-hand-holding-heart"></i></div>
                 <div class="hadis-text">
-                    "Mümin, bir delikten iki kere sokulmaz."
-                </div>
-                <div class="hadis-source">Buhari ve Müslim</div>
-            </div>
-
-            <div class="hadis-card fade-in">
-                <div class="hadis-icon"><i class="fas fa-smile"></i></div>
-                <div class="hadis-text">
-                    "Sizin en hayırlınız, ahlakı en güzel olandır."
-                </div>
-                <div class="hadis-source">Tirmizi</div>
-            </div>
-
-            <div class="hadis-card fade-in">
-                <div class="hadis-icon"><i class="fas fa-seedling"></i></div>
-                <div class="hadis-text">
-                    "Kim bir ağaç dikerse, o ağaçtan yenen, çalınan veya kuşların yediği her şey onun için sadakadır."
-                </div>
-                <div class="hadis-source">Müslim</div>
-            </div>
-
-            <div class="hadis-card fade-in">
-                <div class="hadis-icon"><i class="fas fa-peace"></i></div>
-                <div class="hadis-text">
-                    "Kolaylaştırınız, zorlaştırmayınız. Müjdeleyiniz, nefret ettirmeyiniz."
+                    "Müslüman, insanlara el ve diliyle zarar vermeyen kimsedir."
                 </div>
                 <div class="hadis-source">Buhari</div>
             </div>
 
-            <div class="hadis-card fade-in">
-                <div class="hadis-icon"><i class="fas fa-praying-hands"></i></div>
+            <div class="hadis-card">
+                <div class="hadis-icon"><i class="fas fa-smile-beam"></i></div>
                 <div class="hadis-text">
-                    "Cennet, annenin ayaklarının altındadır."
+                    "Sana bir iyilik yapılırsa karşılığını ver, yapılamazsa onu duyurmaya devam et. Çünkü bu da onun karşılığıdır."
                 </div>
-                <div class="hadis-source">Nesai</div>
+                <div class="hadis-source">Ebu Davud</div>
+            </div>
+
+            <div class="hadis-card">
+                <div class="hadis-icon"><i class="fas fa-people-arrows"></i></div>
+                <div class="hadis-text">
+                    "Kim bir Müslüman'ın dünya sıkıntısından birini giderirse, Allah da onun kıyamet günü sıkıntılarından birini giderir."
+                </div>
+                <div class="hadis-source">Müslim</div>
+            </div>
+
+            <div class="hadis-card">
+                <div class="hadis-icon"><i class="fas fa-gift"></i></div>
+                <div class="hadis-text">
+                    "Birbirinize hediye verin, birbirinizi seversiniz."
+                </div>
+                <div class="hadis-source">Tirmizi</div>
+            </div>
+
+            <div class="hadis-card">
+                <div class="hadis-icon"><i class="fas fa-utensils"></i></div>
+                <div class="hadis-text">
+                    "Yemek yediğinizde doyanı bırakmayınız, aç olan komşunuzu da unutmayınız."
+                </div>
+                <div class="hadis-source">Tirmizi</div>
+            </div>
+
+            <div class="hadis-card">
+                <div class="hadis-icon"><i class="fas fa-hands-helping"></i></div>
+                <div class="hadis-text">
+                    "Allah, kuluna yardım edene yardım eder. Kul, kardeşine yardım ettiği müddetçe Allah da ona yardım eder."
+                </div>
+                <div class="hadis-source">Buhari</div>
             </div>
         </div>
     </section>
 
     <!-- Ilahi Section -->
     <section class="ilahi-section" id="ilahiler">
-        <h2 class="section-title fade-in">Manevi İlahiler</h2>
-        <p class="section-subtitle fade-in">Kalbinizi dinlendirecek seçme ilahiler</p>
+        <h2 class="section-title">Tasavvufi İlahiler</h2>
+        <p class="section-subtitle">Kalbinizi dinlendirecek manevi ilahiler</p>
 
         <div class="ilahi-grid">
-            <div class="ilahi-card fade-in">
+            <div class="ilahi-card">
                 <img src="https://images.stockcake.com/public/e/4/1/e41f990a-57cf-4684-8b27-e57031fcab5f_large/sacred-neon-kaaba-stockcake.jpg" alt="Kabe" class="ilahi-img">
                 <div class="ilahi-title">Tala'al Badru Alayna</div>
                 <div class="ilahi-artist">Geleneksel İlahi</div>
@@ -870,7 +974,7 @@
                 </button>
             </div>
 
-            <div class="ilahi-card fade-in">
+            <div class="ilahi-card">
                 <img src="https://img.freepik.com/premium-vector/kaaba-mecca-green-background-eid_855322-120.jpg" alt="Kabe Yeşil" class="ilahi-img">
                 <div class="ilahi-title">Hasbi Rabbi</div>
                 <div class="ilahi-artist">Sami Yusuf</div>
@@ -879,7 +983,7 @@
                 </button>
             </div>
 
-            <div class="ilahi-card fade-in">
+            <div class="ilahi-card">
                 <img src="https://www.shutterstock.com/image-photo/pencil-sketch-artistic-image-serene-260nw-2575041541.jpg" alt="Kabe Çizim" class="ilahi-img">
                 <div class="ilahi-title">Ya Adheeman</div>
                 <div class="ilahi-artist">Maher Zain</div>
@@ -888,7 +992,7 @@
                 </button>
             </div>
 
-            <div class="ilahi-card fade-in">
+            <div class="ilahi-card">
                 <img src="https://images.stockcake.com/public/e/4/1/e41f990a-57cf-4684-8b27-e57031fcab5f_large/sacred-neon-kaaba-stockcake.jpg" alt="Kabe" class="ilahi-img">
                 <div class="ilahi-title">Allahu Allahu</div>
                 <div class="ilahi-artist">Nusrat Fateh Ali Khan</div>
@@ -902,7 +1006,7 @@
     <!-- Kids Section -->
     <section class="kids-section" id="cocuklar">
         <div class="kids-content">
-            <div class="kids-text fade-in">
+            <div class="kids-text">
                 <h2>Çocuklar İçin İslam</h2>
                 <p>Sevgili çocuklar! İslam'ı öğrenmek, Peygamberlerimizin hayatlarını tanımak ve güzel ahlakı benimsemek için sizleri bekliyoruz. Renkli dünyamızda eğlenerek öğrenin!</p>
                 <ul class="kids-features">
@@ -913,7 +1017,7 @@
                     <li><i class="fas fa-star"></i> Günlük dua ve zikirler</li>
                 </ul>
             </div>
-            <div class="kids-images fade-in">
+            <div class="kids-images">
                 <img src="https://static.vecteezy.com/system/resources/previews/049/987/620/non_2x/islamic-moslem-chibi-cute-cartoon-character-vector.jpg" alt="İslami Çocuk Karakterleri" class="kid-img">
                 <img src="https://www.shutterstock.com/image-vector/cute-chibi-hijab-girl-hugging-600nw-2526779957.jpg" alt="Sevimli Çocuk" class="kid-img">
             </div>
@@ -922,32 +1026,32 @@
 
     <!-- Gallery Section -->
     <section class="gallery-section" id="galeri">
-        <h2 class="section-title fade-in">Kutsal Mekanlar Galerisi</h2>
-        <p class="section-subtitle fade-in">Kabe-i Muazzama ve İslam'ın kutsal mekanlarından görüntüler</p>
+        <h2 class="section-title">Kutsal Mekanlar Galerisi</h2>
+        <p class="section-subtitle">Kabe-i Muazzama ve İslam'ın kutsal mekanlarından görüntüler</p>
 
         <div class="gallery-grid">
-            <div class="gallery-item fade-in">
+            <div class="gallery-item">
                 <img src="https://images.stockcake.com/public/e/4/1/e41f990a-57cf-4684-8b27-e57031fcab5f_large/sacred-neon-kaaba-stockcake.jpg" alt="Kabe">
                 <div class="gallery-overlay">
                     <h3>Kabe-i Muazzama</h3>
                 </div>
             </div>
 
-            <div class="gallery-item fade-in">
+            <div class="gallery-item">
                 <img src="https://img.freepik.com/premium-vector/kaaba-mecca-green-background-eid_855322-120.jpg" alt="Kabe Yeşil">
                 <div class="gallery-overlay">
                     <h3>Mescid-i Haram</h3>
                 </div>
             </div>
 
-            <div class="gallery-item fade-in">
+            <div class="gallery-item">
                 <img src="https://www.shutterstock.com/image-photo/pencil-sketch-artistic-image-serene-260nw-2575041541.jpg" alt="Kabe Çizim">
                 <div class="gallery-overlay">
                     <h3>Kutsal Topraklar</h3>
                 </div>
             </div>
 
-            <div class="gallery-item fade-in">
+            <div class="gallery-item">
                 <img src="https://images.stockcake.com/public/e/4/1/e41f990a-57cf-4684-8b27-e57031fcab5f_large/sacred-neon-kaaba-stockcake.jpg" alt="Kabe Gece">
                 <div class="gallery-overlay">
                     <h3>Kabe Gece Görünümü</h3>
@@ -979,37 +1083,157 @@
     </footer>
 
     <script>
+        // Audio Context for click sounds
+        let audioCtx = null;
+        let isMuted = false;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        // Click Sound Effect - Tok, güzel his
+        function playClickSound() {
+            if (isMuted || !audioCtx) return;
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            const filter = audioCtx.createBiquadFilter();
+
+            // Tok, derin bir ses
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.15);
+
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(800, audioCtx.currentTime);
+            filter.Q.setValueAtTime(5, audioCtx.currentTime);
+
+            gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start(audioCtx.currentTime);
+            osc.stop(audioCtx.currentTime + 0.15);
+        }
+
+        // Hover Sound Effect - Hafif, zarif
+        function playHoverSound() {
+            if (isMuted || !audioCtx) return;
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.08);
+
+            gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start(audioCtx.currentTime);
+            osc.stop(audioCtx.currentTime + 0.08);
+        }
+
+        // Add click sounds to all buttons and links
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize audio on first user interaction
+            document.body.addEventListener('click', function() {
+                initAudio();
+            }, { once: true });
+
+            // Add click sounds to all buttons
+            document.querySelectorAll('button, .btn, .play-btn, .ayet-nav button').forEach(el => {
+                el.addEventListener('click', playClickSound);
+            });
+
+            // Add hover sounds to interactive elements
+            document.querySelectorAll('.hadis-card, .ilahi-card, .gallery-item, .nav-links a').forEach(el => {
+                el.addEventListener('mouseenter', playHoverSound);
+            });
+
+            // Add click sounds to nav links
+            document.querySelectorAll('.nav-links a').forEach(el => {
+                el.addEventListener('click', playClickSound);
+            });
+        });
+
+        // Sound Toggle
+        function toggleSound() {
+            const btn = document.getElementById('soundToggle');
+            const icon = document.getElementById('soundIcon');
+            const player = document.getElementById('musicPlayer');
+            const iframe = document.getElementById('musicIframe');
+
+            isMuted = !isMuted;
+
+            if (isMuted) {
+                btn.classList.add('muted');
+                icon.classList.remove('fa-volume-up');
+                icon.classList.add('fa-volume-mute');
+                // Mute YouTube iframe
+                iframe.src = iframe.src.replace('mute=0', 'mute=1');
+                player.classList.remove('active');
+            } else {
+                btn.classList.remove('muted');
+                icon.classList.remove('fa-volume-mute');
+                icon.classList.add('fa-volume-up');
+                // Unmute YouTube iframe
+                iframe.src = iframe.src.replace('mute=1', 'mute=0');
+                player.classList.add('active');
+            }
+        }
+
+        // Close Music Player
+        function closeMusicPlayer() {
+            document.getElementById('musicPlayer').classList.remove('active');
+        }
+
+        // Open Music Player on first interaction
+        document.addEventListener('click', function() {
+            if (!isMuted) {
+                document.getElementById('musicPlayer').classList.add('active');
+            }
+        }, { once: true });
+
         // Mobile Menu
         function toggleMenu() {
             document.getElementById('navLinks').classList.toggle('active');
         }
 
-        // Ayet Data
+        // Ayet Data - İyilik temalı
         const ayetler = [
             {
-                arabic: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
-                turkish: ""Rahman ve Rahim olan Allah'ın adıyla."",
-                source: "Fatiha Suresi, 1. Ayet"
+                arabic: "وَتَعَاوَنُوا عَلَى الْبِرِّ وَالتَّقْوَىٰ",
+                turkish: ""İyilik ve takva üzere birbirinize yardım edin."",
+                source: "Maide Suresi, 2. Ayet"
             },
             {
-                arabic: "إِنَّ مَعَ الْعُسْرِ يُسْرًا",
-                turkish: ""Şüphesiz ki zorlukla beraber bir kolaylık vardır."",
-                source: "İnşirah Suresi, 5. Ayet"
-            },
-            {
-                arabic: "وَاعْبُدُوا الرَّحْمَٰنَ الَّذِي يَسْأَلُكُمْ إِيَّاهُ وَالْآخِرَةَ",
-                turkish: ""Rahman'a kulluk edin! O, sizden kendisine ve ahirete inanmanızı istiyor."",
-                source: "Furkan Suresi, 63. Ayet"
-            },
-            {
-                arabic: "وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا",
-                turkish: ""Kim Allah'tan korkarsa, Allah ona bir çıkış yolu verir."",
-                source: "Talak Suresi, 2. Ayet"
+                arabic: "إِنَّ اللَّهَ يَأْمُرُ بِالْعَدْلِ وَالْإِحْسَانِ",
+                turkish: ""Şüphesiz Allah adalet ve iyilik yapmayı emreder."",
+                source: "Nahl Suresi, 90. Ayet"
             },
             {
                 arabic: "وَأَحْسِنُوا إِنَّ اللَّهَ يُحِبُّ الْمُحْسِنِينَ",
                 turkish: ""İyilik edin. Şüphesiz Allah iyilik edenleri sever."",
                 source: "Bakara Suresi, 195. Ayet"
+            },
+            {
+                arabic: "وَالَّذِينَ يَمْنَعُونَ الْمَاعُونَ",
+                turkish: ""Ve iyiliği, yardımı engelleyenlerin vay haline!"",
+                source: "Maun Suresi, 1-7. Ayetler"
+            },
+            {
+                arabic: "وَلَا تَسْتَوِي الْحَسَنَةُ وَلَا السَّيِّئَةُ",
+                turkish: ""İyilik de kötülük de bir olmaz. Sen kötülüğü en güzel bir şekilde sav."",
+                source: "Fussilet Suresi, 34. Ayet"
             }
         ];
 
@@ -1031,7 +1255,7 @@
             updateAyet();
         }
 
-        // Ilahi Player Simulation
+        // ==================== ILAHI PLAYER ====================
         function playIlahi(btn) {
             const icon = btn.querySelector('i');
             if (btn.classList.contains('playing')) {
@@ -1040,7 +1264,6 @@
                 icon.classList.add('fa-play');
                 btn.innerHTML = '<i class="fas fa-play"></i> Dinle';
             } else {
-                // Stop others
                 document.querySelectorAll('.play-btn').forEach(b => {
                     b.classList.remove('playing');
                     b.innerHTML = '<i class="fas fa-play"></i> Dinle';
@@ -1050,23 +1273,7 @@
             }
         }
 
-        // Scroll Animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-        // Smooth Scroll
+        // ==================== SMOOTH SCROLL ====================
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -1078,14 +1285,14 @@
             });
         });
 
-        // Navbar scroll effect
+        // ==================== NAVBAR SCROLL ====================
         window.addEventListener('scroll', () => {
             const nav = document.querySelector('nav');
             if (window.scrollY > 50) {
-                nav.style.background = 'rgba(10, 10, 10, 0.98)';
+                nav.style.background = currentTheme === 'blue' ? 'rgba(15, 23, 42, 0.98)' : 'rgba(10, 10, 10, 0.98)';
                 nav.style.boxShadow = '0 5px 30px rgba(0,0,0,0.5)';
             } else {
-                nav.style.background = 'rgba(10, 10, 10, 0.95)';
+                nav.style.background = currentTheme === 'blue' ? 'rgba(15, 23, 42, 0.95)' : 'rgba(10, 10, 10, 0.95)';
                 nav.style.boxShadow = 'none';
             }
         });
