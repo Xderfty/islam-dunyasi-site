@@ -185,12 +185,24 @@
             position: relative;
             display: flex; align-items: center; justify-content: center;
             text-align: center; overflow: hidden;
-        }
-        .hero-bg {
-            position: absolute; inset: 0;
-            background: url('https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=1920&q=80') center/cover;
-            filter: brightness(0.28) saturate(1.2);
-            transition: opacity 0.8s;
+       .hero{
+background:
+linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+url("https://images.unsplash.com/photo-1564760055775-d63b17a55c44?q=80&w=1920");
+background-size:cover;
+background-position:center;
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+animation: slowZoom 30s infinite alternate;
+}
+
+@keyframes slowZoom{
+0%{background-size:100%;}
+100%{background-size:120%;}
+}
         }
         [data-theme="blue"] .hero-bg {
             background: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80') center/cover;
